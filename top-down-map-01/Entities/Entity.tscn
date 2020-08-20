@@ -1,0 +1,10 @@
+[gd_scene format=2]
+
+[node name="Entity" type="KinematicBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[node name="Line2D" type="Line2D" parent="."]
+width = 5.0
