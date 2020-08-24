@@ -7,6 +7,7 @@ var godsSelectedBuilding:int = IngameData.BUILDING_TYPE.HOUSE
 
 # god queus tasks
 # peons picks tasks up
+const TASK_TYPE = IngameData.TASK_TYPE
 
 var GOD_TASKS = Task_Manager.new(self)
 var UNIT_TASKS = Task_Manager.new(self)
@@ -21,7 +22,7 @@ func _unhandled_input(event):
 		if event.button_index == 1:
 			var mouse_click = get_global_mouse_position()
 			# ToDo:add logic for different click intentions - MOVE / BUILD / ???
-			var simple_task:IngameData.Unit_Task = IngameData.Unit_Task.new(IngameData.TASK_TYPE.MOVE, IngameData.UNIT_TYPE.PEON, 1, mouse_click)
+			var simple_task:IngameData.Unit_Task = IngameData.Unit_Task.new(IngameData.TASK_TYPE.MOVE.HIGH, IngameData.UNIT_TYPE.PEON, 1, mouse_click)
 			GOD_TASKS.add_task(simple_task)
 			
 			
@@ -39,11 +40,11 @@ class Task_Manager:
 	var completed_tasks_amount:int = 0
 	var queued_tasks:Dictionary = {} setget add_task, get_task
 	
-	func add_task(unit_task):
+	func add_task(unit_task)->String:
 		completed_tasks_amount += 1
 		var task_id = "task-" + str(completed_tasks_amount)
 		if completed_tasks.has(task_id) || queued_tasks.has(task_id):
-			return
+			return "failed to add"
 		else:
 #			var unit_task:IngameData.Unit_Task = IngameData.Unit_Task.new(type, required_unit, required_unit_count, location)
 			queued_tasks[task_id] = unit_task
@@ -51,14 +52,28 @@ class Task_Manager:
 		# send signal "task updated"
 		parent.emit_signal("TASKS_UPDATED")
 		print(task_id, " type: ", unit_task.type)
+		return task_id
 		
+		
+	func create_task(type, location)->String:
+		if type == parent.TASK_TYPE.MOVE.HIGH:
+			var simple_task:IngameData.Unit_Task = IngameData.Unit_Task.new(type, IngameData.UNIT_TYPE.PEON, 1, location)
+			return self.add_task(simple_task)
+		return "failed to create"
 	
 	func get_task():
+		#should add lock
 		if queued_tasks.size() > 0:
 			print("get task: ", queued_tasks.keys()[0])
 			return queued_tasks[queued_tasks.keys()[0]]
 		return null
 		
+	func close_task(task_id:String):
+		completed_tasks[task_id] = queued_tasks[task_id]
+		completed_tasks_amount += 1
+		queued_tasks.erase(task_id)
+		
+	
 	func _init(parent):
 		self.parent = parent
 

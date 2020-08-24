@@ -16,3 +16,9 @@ shape = SubResource( 1 )
 [node name="Sprite" parent="." index="1"]
 position = Vector2( 0, -24 )
 texture = ExtResource( 3 )
+
+[node name="Perception" parent="." index="3" groups=[
+"Perception",
+]]
+position = Vector2( 0, -9.93464 )
+scale = Vector2( 10, 10 )

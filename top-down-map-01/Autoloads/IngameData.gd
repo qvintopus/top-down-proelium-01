@@ -7,7 +7,12 @@ const RESOURCE_TYPE = {NONE = 0, WOOD = 1, STONE = 2, CHILD = 3}
 const NATURELS_TYPE = {NONE = 0, TREE = 1, ROCK = 2}
 
 # InWorldy Things
-const TASK_TYPE = {NONE = 0, MOVE = 1, CHOP_WOOD = 2, BUILD_HOUSE = 3}
+const TASK_TYPE = {
+	NONE = 0
+	,MOVE = { HIGH = 0, MIDDLE = 1, LOW = 2}
+	,CHOP_WOOD = { HIGH = 0, MIDDLE = 1, LOW = 2}
+	,BUILD_HOUSE = { HIGH = 0, MIDDLE = 1, LOW = 2}
+}
 const UNIT_TYPE = {NONE = 0, PEON = 1}
 
 class Unit_Task:
