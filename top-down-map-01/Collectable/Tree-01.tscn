@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Collectable/Collectable.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Environment/medievalEnvironment_01.png" type="Texture" id=2]
+[ext_resource path="res://Collectable/Tree-01.gd" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+
+[node name="Tree-01" instance=ExtResource( 1 )]
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" parent="." index="0"]
+position = Vector2( 0.473003, -10 )
+shape = SubResource( 1 )
+
+[node name="Sprite" parent="." index="1"]
+position = Vector2( 0, -41.9561 )
+texture = ExtResource( 2 )

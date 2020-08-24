@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-class_name Entity
+class_name Unit
 
 # moves to target
 # job list of actions with priorities
@@ -19,6 +19,8 @@ var velocity: = Vector2.ZERO
 var line2D:Line2D
 
 var inTheBusiness:bool = false
+
+
 
 
 func _ready():
@@ -94,4 +96,32 @@ func get_target_path(_targetPos):
 #		if event.button_index == 1:
 #			state = MOVE
 #			get_target_path(get_global_mouse_position())
+
+
+
+func to_live_i_must():
+	pass
+	# check if willing to do something again
+	# check if something urgent for self to pickup
+	# check if something required to be done
+	# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
