@@ -1,40 +1,50 @@
 extends Node
 
-
-# Worldy Things
-const BUILDING_TYPE = {NONE = 0, HOUSE = 1, LUMBER_MILL = 2}
-const RESOURCE_TYPE = {NONE = 0, WOOD = 1, STONE = 2, CHILD = 3}
-const NATURELS_TYPE = {NONE = 0, TREE = 1, ROCK = 2}
-
-# InWorldy Things
-const TASK_TYPE = {
-	NONE = 0
-	,MOVE = { HIGH = 0, MIDDLE = 1, LOW = 2}
-	,CHOP_WOOD = { HIGH = 0, MIDDLE = 1, LOW = 2}
-	,BUILD_HOUSE = { HIGH = 0, MIDDLE = 1, LOW = 2}
+var defaults = {
+	BUILDING_TYPE = { NONE = 0, HOUSE = 1, LUMBER_MILL = 2 },
+	RESOURCE_TYPE = { NONE = 0, WOOD = 1, STONE = 2, CHILD = 3 },
+	NATURELS_TYPE = { NONE = 0, TREE = 1, ROCK = 2 },
+	TASK_TYPE = {
+		NONE = { NONEXISTANT = 0 }
+		,MOVE = { WALKING = 0, RUNNING = 1 }
+		,CHOP_WOOD = { CHOP = 0 }
+		,BUILD_HOUSE = { BUILD = 0 }
+	},
+	TASK_STATUS = { NEW = "NEW", BLOCKED = "BLOCKED", IN_PROGRESS = "IN_PROGRESS", DONE = "DONE", FAILED = "FAILED" },
+	UNIT_TYPE = { NONE = 0, PEON = 1 }
 }
-const UNIT_TYPE = {NONE = 0, PEON = 1}
 
-class Unit_Task:
-	# IngameData.UNIT_TYPE
-	var type:int
-	# ToDo: validate if doable
-	var isDoable:bool = true
-	# task icon ?
+
+class Task:
+	# what this task should have and not have?
+	# task should have the basic information on what's required, whilst task-manager would manage it's status and external managment
+	# more?
+
+	var name:String = "none"
+	var unit_name:String = "none"
+
+	# IngameData.TASK_TYPE - should be able to compare with the sub-dictionary reference comparisons - make sure only that will happen 
+	var type:Dictionary
+	
 	
 	var required_unit:int
 	var required_unit_count:int
 	
+	# most tasks should be pinpointed to a location
 	var location:Vector2 = Vector2.ZERO
+	var area_size:int = 100
+	var repetitions:int = 1
 	
-	func _init(type, required_unit, required_unit_count, location):
+	# ToDo: implement comments / log
+
+	func _init(name, type, required_unit, required_unit_count, location):
+		self.name = name
 		self.type = type
 		self.required_unit = required_unit
 		self.required_unit_count = required_unit_count
 		self.location = location
 		
 	
-
 
 class Building:
 	# IngameData.BUILDING_TYPE

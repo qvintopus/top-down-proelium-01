@@ -1,79 +1,73 @@
 extends KinematicBody2D
-
 class_name Unit
 
-# moves to target
-# job list of actions with priorities
-# 
 
-const DEBUG_MODE:bool = true
+var CONSTANTS = IngameData.defaults # global constants
+var ALL_TASKS = IngameLogics.ALL_TASKS # access to global task list
 
-const TASK_TYPE = IngameData.TASK_TYPE
-var UNIT_TASKS = IngameLogics.UNIT_TASKS
-var GOD_TASKS = IngameLogics.GOD_TASKS
+export (bool) var DEBUG_MODE = true
+export (float) var speed = 5.0 * 60.0
 
-enum {IDLE, MOVE, HARVEST_WOOD, GATHER, PATROL}
 
-var targetPosition:Vector2 = Vector2.ZERO
-var speed:float = 5 *60
+var targetPosition:Vector2 = Vector2.ZERO # unit's moving location
 var path: PoolVector2Array
-var state = TASK_TYPE.NONE
 var Nav: Navigation2D
 var velocity: = Vector2.ZERO
-var line2D:Line2D
 
+var curState = CONSTANTS.TASK_TYPE.NONE
+var curTask:IngameData.Task = null
 var isBusy:bool = false
 var jobAge:int = 0
-var isAlive:bool = true
-var curTask:String = "none"
+
+onready var sm: = $UnitStateMachine
+onready var IdleBuffer:Timer = $IdleBuffer
+
+
+
 
 
 func _ready():
 	Nav = get_tree().get_nodes_in_group("Navigation")[0]
-	line2D = $Line2D
-	line2D.set_as_toplevel(true)
-#	check_tasks()
-	# would be nice to also store unit names somewhere - like if ants had names..
+#	line2D.set_as_toplevel(true)
 	print("unit has 'woken: ", self.name)
-#	the_endless_loop()
-#	set_process(true)
 
-func _process(delta):
-	#check available tasks
-	#prep appropriate actions
-	#init prepped actions
-	if !isBusy:
-		to_live_i_must(!isBusy)
-#		check_tasks()
+
+func process(delta):
 	pass
+#	to_live_i_must(!isBusy)
 
-func _physics_process(delta):
-	match state:
-		TASK_TYPE.MOVE.HIGH:
-#			print("click")
-			state_move(delta)
-	if DEBUG_MODE:
-		update()
 
-func _draw():
-	if DEBUG_MODE:
-		draw_line(Vector2.ZERO, get_local_mouse_position(), Color.black)
-		
+#func physics_process(delta):
+##	match curState:
+##		CONSTANTS.TASK_TYPE.NONE:
+##			#do nothing
+##			pass
+##		CONSTANTS.TASK_TYPE.MOVE:
+###			print("click")
+##			unit_move(delta)
+##	if DEBUG_MODE:
+##		update()
+#
+#func _draw():
+#	if DEBUG_MODE:
+#		draw_line(Vector2.ZERO, get_local_mouse_position(), Color.black)
 
-func perform(the_task:IngameData.Unit_Task):
+
+func check_task()->IngameData.Task:
+	var simple_task:IngameData.Task = ALL_TASKS.get_task()
+	return simple_task
+
+
+func do_task(the_task:IngameData.Task):
 	isBusy = true
 	# do the thang
 	
-	if the_task.type == TASK_TYPE.MOVE.HIGH:
-		state = TASK_TYPE.MOVE.HIGH
+	if the_task.type == CONSTANTS.TASK_TYPE.MOVE:
+#		curState = CONSTANTS.TASK_TYPE.MOVE
 		get_target_path(the_task.location)
-		
-		
-#	isBusy = false
-	
 
 
-func state_move(delta: float):
+func unit_move(delta: float):
 	if path.size() > 0:
 		var d: float = position.distance_to(path[0])
 		if d > speed * delta:
@@ -84,49 +78,26 @@ func state_move(delta: float):
 			if path.size() == 1:
 				velocity = (path[0] - position) / delta
 				move_and_slide(velocity)
-				state = TASK_TYPE.NONE
-				isBusy = false # should not be here
-				GOD_TASKS.close_task(curTask)
+				path.remove(0)
 			else:
 				path.remove(0)
-	
+	else:
+		ALL_TASKS.update_task(curTask.name, CONSTANTS.TASK_STATUS.DONE)
+		isBusy = false # should not be here
+		sm.state.state_check()
+		
+
 
 func get_target_path(_targetPos):
 	targetPosition = _targetPos
 	path = Nav.get_simple_path(global_position, targetPosition, false)
-	if DEBUG_MODE:
-		line2D.points = path
 
 
-func check_tasks():
-	var task = IngameLogics.GOD_TASKS.get_task()
-	print("task: ", task)
-	if task == null:
-		print("disabling task")
-		yield(IngameLogics, "TASKS_UPDATED")
-		print("task: ", task)
-		task = IngameLogics.GOD_TASKS.get_task()
-		
-		# ToDo: process task appropriatly
-		state = TASK_TYPE.MOVE.HIGH
-		get_target_path(task.location)
-		isBusy = true
-
-
-func the_endless_loop():
-	jobAge += 1
-	
-	# ToDo: think of a way to get rid of the while loop
-	while isAlive:
-		to_live_i_must(isBusy)
-	
-	# here goes the dying process - "do the flop"
-	
 
 # meant as the moment when introspectively decide on "okay.. but what now?"
-func to_live_i_must(really:bool = true):
+func to_live_i_must(really:bool = false):
 	if !really:
-		print(self.name, " says - naaa, next time")
+#		print(self.name, " says - naaa, next time")
 		return
 	# check if willing to do something again
 	# check if something urgent for self to pickup
@@ -135,13 +106,10 @@ func to_live_i_must(really:bool = true):
 	# perform action
 	# something else calls this function again
 	
-	var simple_task:IngameData.Unit_Task
+	var simple_task:IngameData.Task
 	
 	# ToDo: create thing where THIS unit can check what self.wants
-	simple_task = IngameLogics.GOD_TASKS.get_task()
-	if simple_task == null:
-		simple_task = IngameLogics.UNIT_TASKS.get_task()
-		
+	simple_task = ALL_TASKS.get_task()
 	if simple_task == null:
 		# create PATROL type of activity
 #		var perception = get_tree().get_nodes_in_group("Perception")[0]
@@ -152,13 +120,18 @@ func to_live_i_must(really:bool = true):
 		POI.y += rand_range(-offset,offset)
 #		state = TASK_TYPE.MOVE.HIGH
 #		get_target_path(POI)
-		curTask = GOD_TASKS.create_task(IngameData.TASK_TYPE.MOVE.HIGH, POI)
+		var temp_task = ALL_TASKS.create_task(
+			CONSTANTS.TASK_TYPE.MOVE
+			,CONSTANTS.UNIT_TYPE.PEON
+			,POI)
+		ALL_TASKS.add_task(temp_task)
 #		isBusy = true
 	
-	simple_task = IngameLogics.GOD_TASKS.get_task()
-#	print("isBusy: ", isBusy)
+	if simple_task != null:
+		curTask = simple_task
+		do_task(simple_task)
 	
-	perform(simple_task)
+	
 
 
 

@@ -30,10 +30,5 @@ navpoly = SubResource( 1 )
 [node name="Peon-02" parent="." instance=ExtResource( 3 )]
 
 [node name="Peon-03" parent="." instance=ExtResource( 3 )]
-position = Vector2( 44.4472, 137.31 )
 
 [node name="Peon-04" parent="." instance=ExtResource( 3 )]
-position = Vector2( -138.898, 65.0834 )
-
-[node name="Peon-05" parent="." instance=ExtResource( 3 )]
-position = Vector2( 646.072, -294.463 )
