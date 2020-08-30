@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Buildings/Structure.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Structures/medievalStructure_18.png" type="Texture" id=2]
+[ext_resource path="res://Buildings/House-01.gd" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 48, 40 )
+
+[node name="House-01" instance=ExtResource( 1 )]
+collision_mask = 2
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" parent="." index="0"]
+shape = SubResource( 1 )
+
+[node name="Sprite" parent="." index="1"]
+position = Vector2( 0, -8 )
+texture = ExtResource( 2 )

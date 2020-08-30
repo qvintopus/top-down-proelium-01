@@ -11,7 +11,9 @@ outlines = [ PoolVector2Array( -2175.99, -1280.01, 2687.96, -1280.01, 2688.01, 1
 
 [node name="Level-01" type="Node2D"]
 
-[node name="TileMap" type="TileMap" parent="."]
+[node name="TileMap" type="TileMap" parent="." groups=[
+"TileMap",
+]]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 128, 128 )
 format = 1
@@ -27,8 +29,18 @@ navpoly = SubResource( 1 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 
-[node name="Peon-02" parent="." instance=ExtResource( 3 )]
+[node name="Buildings" type="Node" parent="." groups=[
+"Buildings",
+]]
 
-[node name="Peon-03" parent="." instance=ExtResource( 3 )]
+[node name="Units" type="Node" parent="." groups=[
+"Units",
+]]
 
-[node name="Peon-04" parent="." instance=ExtResource( 3 )]
+[node name="Peon-02" parent="Units" instance=ExtResource( 3 )]
+position = Vector2( -34.487, -20.2165 )
+speed = 200.0
+
+[node name="Peon-03" parent="Units" instance=ExtResource( 3 )]
+position = Vector2( 42.8115, -26.1626 )
+speed = 200.0

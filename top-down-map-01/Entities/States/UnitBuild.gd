@@ -1,11 +1,11 @@
 extends UnitState
-class_name UnitWalk
+class_name UnitBuild
 
 # helper to disabled state_check on every frame
 var check_enabled:bool = true
 
 func _init(_sm).(_sm)->void:
-	name = "Walk"
+	name = "Build"
 
 func enter(_msg:Dictionary = {})->void:
 	unit.do_task(unit.curTask)
@@ -25,8 +25,6 @@ func process(delta:float)->void:
 
 func state_check()->void:
 	unit.curTask = unit.check_task()
-	if unit.unitName == "@Peon-02@3":
-		pass
 	if unit.curTask == null:
 		#transition goes here
 		sm.transition_to("Idle")

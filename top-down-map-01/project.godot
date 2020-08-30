@@ -29,10 +29,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Addons/StateMachine.gd"
 }, {
+"base": "StaticBody2D",
+"class": "Structure",
+"language": "GDScript",
+"path": "res://Buildings/Structure.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Unit",
 "language": "GDScript",
 "path": "res://Entities/Unit.gd"
+}, {
+"base": "UnitState",
+"class": "UnitBuild",
+"language": "GDScript",
+"path": "res://Entities/States/UnitBuild.gd"
 }, {
 "base": "UnitState",
 "class": "UnitIdle",
@@ -59,7 +69,9 @@ _global_script_class_icons={
 "Entity": "",
 "State": "",
 "StateMachine": "",
+"Structure": "",
 "Unit": "",
+"UnitBuild": "",
 "UnitIdle": "",
 "UnitState": "",
 "UnitStateMachine": "",
@@ -129,6 +141,21 @@ move_up={
 move_down={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":83,"unicode":0,"echo":false,"script":null)
+ ]
+}
+select_walk={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":49,"unicode":0,"echo":false,"script":null)
+ ]
+}
+select_build={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":50,"unicode":0,"echo":false,"script":null)
+ ]
+}
+select_make_child={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":51,"unicode":0,"echo":false,"script":null)
  ]
 }
 

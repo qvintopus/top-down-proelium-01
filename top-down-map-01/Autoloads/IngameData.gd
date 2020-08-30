@@ -9,6 +9,7 @@ var defaults = {
 		,MOVE = { WALKING = 0, RUNNING = 1 }
 		,CHOP_WOOD = { CHOP = 0 }
 		,BUILD_HOUSE = { BUILD = 0 }
+		,CREATE_CHILD = { SMALL_CHILD = 0 }
 	},
 	TASK_STATUS = { NEW = "NEW", BLOCKED = "BLOCKED", IN_PROGRESS = "IN_PROGRESS", DONE = "DONE", FAILED = "FAILED" },
 	UNIT_TYPE = { NONE = 0, PEON = 1 }
@@ -29,20 +30,23 @@ class Task:
 	
 	var required_unit:int
 	var required_unit_count:int
+	var pending_unit_count:int = 0
+	var building
 	
 	# most tasks should be pinpointed to a location
 	var location:Vector2 = Vector2.ZERO
 	var area_size:int = 100
 	var repetitions:int = 1
 	
-	# ToDo: implement comments / log
+	# ToDo: implement comments / log from units
 
-	func _init(name, type, required_unit, required_unit_count, location):
+	func _init(name, type, required_unit, required_unit_count, location, building = null):
 		self.name = name
 		self.type = type
 		self.required_unit = required_unit
 		self.required_unit_count = required_unit_count
 		self.location = location
+		self.building = building
 		
 	
 
